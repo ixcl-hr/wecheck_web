@@ -26,8 +26,8 @@ class _DashboarddState extends State<Dashboard> with WidgetsBindingObserver {
     const OTScreen(),
     const ScanScreen(),
     const AbsentScreen(),
-    //const SwapWorkShiftScreen(),
-    const ScanScreen2(),
+    const SwapWorkShiftScreen(),
+    //const ScanScreen2(),
   ];
 
   @override
