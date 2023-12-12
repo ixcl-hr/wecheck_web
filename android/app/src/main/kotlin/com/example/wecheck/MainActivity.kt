@@ -1,4 +1,4 @@
-package com.example.wecheck
+package iexcellence.hr.wecheck
 
 import io.flutter.embedding.android.FlutterActivity
 

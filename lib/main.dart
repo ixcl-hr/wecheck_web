@@ -1,7 +1,81 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
+// import 'dart:html';
+import 'dart:io';
 
-void main() {
+// import 'package:app_install_date/app_install_date.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:permission_handler/permission_handler.dart';
+// import 'package:package_info_plus/package_info_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wecheck/constants/config.dart';
+import 'package:wecheck/screens/dashboard_screen.dart';
+import 'package:wecheck/screens/register_screen.dart';
+import 'package:wecheck/services/util_service.dart';
+
+import 'package:location/location.dart';
+
+GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+bool startLoad = true;
+void main() async {
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+
   runApp(const MyApp());
+  FirebaseApp? app = null;
+  try {
+    if (kIsWeb) {
+      app = await Firebase.initializeApp(
+          //     name: "wecheck",
+          options: const FirebaseOptions(
+        apiKey: "AIzaSyD63WPeA769dOREvYuzbnzNNna1YF6_l4w",
+        authDomain: "coastal-stone-341712.firebaseapp.com",
+        projectId: "coastal-stone-341712",
+        storageBucket: "coastal-stone-341712.appspot.com",
+        messagingSenderId: "492430545955",
+        appId: "1:492430545955:web:22d09a2331598e57978d96",
+        measurementId: "G-3YTEFH8H0R",
+      ));
+    } else {
+      //await Firebase.initializeApp(name: "wecheck");
+      app = await Firebase.initializeApp();
+    }
+
+    FirebaseFirestore.instance.settings = const Settings(
+      persistenceEnabled: true,
+    );
+
+    await FirebaseFirestore.instance
+        .collection("host")
+        .where("app", isEqualTo: "wecheck")
+        .get()
+        .then(
+      (querySnapshot) {
+        //print("Successfully completed");
+        for (var docSnapshot in querySnapshot.docs) {
+          //print('${docSnapshot.id} => ${docSnapshot.data()}');
+          ApiDomain = querySnapshot.docs[0].data()["url"];
+        }
+      },
+      onError: (e) => ApiDomain =
+          "https://hrmobile.iexcellence.cloud", //print("Error completing: $e"),
+    );
+  } on Exception catch (ex) {
+    print(ex.toString());
+  }
+
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent, // transparent status bar
+  ));
+
+  await UtilService.reToken();
+  await UtilService.getLanguageFromFireStore();
 }
 
 class MyApp extends StatelessWidget {
@@ -11,115 +85,185 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'WeCheck',
+      builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+          child: child ?? Container()),
+      navigatorKey: navigatorKey,
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a blue toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+        primarySwatch: Colors.orange,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const Dashboard(),
+      initialRoute: '/splash',
+      routes: <String, WidgetBuilder>{
+        '/splash': (context) => const SplashScreen(),
+        Register.id: (context) => const Register(),
+        Dashboard.id: (context) => const Dashboard(
+              tabIndex: 0,
+            ),
+        // ScanScreen.id: (context) => const Dashboard(
+        //       tabIndex: 2,
+        //     ),
+      },
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
+class MyHttpOverrides extends HttpOverrides {
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+  }
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({Key? key}) : super(key: key);
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  @override
+  _SplashScreenState createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  late SharedPreferences prefs;
+  late DateTime newInstallTime;
+  var timeout = const Duration(seconds: 5);
+  var ms = const Duration(milliseconds: 1);
+
+  String appName = "";
+  String appVersion = "";
+  int buildNumber = 0;
+
+  startTimeout([int? milliseconds]) async {
+    var duration = milliseconds == null ? timeout : ms * milliseconds;
+    return Timer(duration, handleTimeout);
+    //handleTimeout();
+  }
+
+  void handleTimeout() async {
+    bool valid = true;
+
+    // PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    // appName = packageInfo.appName;
+    // appVersion = packageInfo.version;
+    // buildNumber = int.parse(packageInfo.buildNumber);
+
+    if (mounted) {
+      setState(() {
+        appVersion = appVersion;
+      });
+
+      prefs = await SharedPreferences.getInstance();
+      String? sessionId = prefs.getString('session_id');
+      String? token = prefs.getString('token');
+
+      // newInstallTime =
+      //     !kIsWeb ? await AppInstallDate().installDate : DateTime.now();
+      // DateTime? oldInstallTime =
+      //     !kIsWeb ? UtilService.getInstallTimeFromPrefs(prefs) : newInstallTime;
+
+      // if (sessionId == null ||
+      //     oldInstallTime == null ||
+      //     oldInstallTime.compareTo(newInstallTime) < 0 ||
+      //     token == null ||
+      //     token.isEmpty) valid = false;
+
+      // if (valid) {
+      //   Navigator.pushNamedAndRemoveUntil(
+      //       context, Dashboard.id, (route) => false);
+      // } else {
+      //   toNewRegisterScreen();
+      // }
+
+      Navigator.pushNamedAndRemoveUntil(
+          context, Dashboard.id, (route) => false);
+    }
+  }
+
+  void toNewRegisterScreen() {
+    UtilService.setSharedPreferencesWithPrefs(
+        prefs, "installTime", newInstallTime.toString());
+    Navigator.pushNamedAndRemoveUntil(context, Register.id, (route) => false);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initPrefs();
+    startTimeout();
+  }
+
+  initPrefs() async {
+    //await document.documentElement!.requestFullscreen();
+    //window.history.pushState(null, 'wecheck', '#Register');
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    UtilService().validateSession(context);
+    FlutterNativeSplash.remove();
+
     return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+        child: Container(
+          height: double.infinity,
+          width: double.infinity,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage("assets/images/background.png"),
+                alignment: Alignment.center,
+                fit: BoxFit.fill),
+          ),
+          child: Stack(
+            children: <Widget>[
+              Center(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Image.asset(
+                          "assets/images/scan1.png",
+                          width: 170,
+                          height: 170,
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        const Text(
+                          "WeCheck",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 50,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          (kIsWeb
+                              ? "Loading...."
+                              : (appVersion.isEmpty
+                                  ? "Checking Version...."
+                                  : "version $appVersion")),
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        const CircularProgressIndicator(),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

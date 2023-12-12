@@ -1,4 +1,4 @@
-String ApiDomain = ""; //"https://hrmobile.iexcellence.cloud";
+String ApiDomain = "https://hrmobile.iexcellence.cloud";
 //const String ApiDomain = "https://8484-58-136-188-253.ngrok-free.app";
 String ApiMaster = "$ApiDomain/wecheck_api/api/";
 //ngrok http -host-header=localhost 85

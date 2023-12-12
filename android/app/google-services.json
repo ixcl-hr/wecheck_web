@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "492430545955",
+    "project_id": "coastal-stone-341712",
+    "storage_bucket": "coastal-stone-341712.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:492430545955:android:1289b41a335393d3978d96",
+        "android_client_info": {
+          "package_name": "iexcellence.hr.wecheck"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "492430545955-4cguak8lk6246immrigaeusf6qae1ou3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "iexcellence.hr.wecheck",
+            "certificate_hash": "15d11d604b4528fc8124c7e6898262ae190792f8"
+          }
+        },
+        {
+          "client_id": "492430545955-4kr7v8hpc02olnli8j41nbgof4rp3hv6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCniaZ2Y7GXQSq-wJn4Od2ZKjl0p2fK0Js"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "492430545955-4kr7v8hpc02olnli8j41nbgof4rp3hv6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
