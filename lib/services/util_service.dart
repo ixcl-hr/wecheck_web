@@ -1,5 +1,6 @@
 // import 'dart:html';
 import 'dart:convert' as convert;
+import 'dart:io';
 import 'dart:ui';
 import 'package:app_install_date/app_install_date.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -301,7 +302,11 @@ class UtilService {
   static Future<void> launchAppStore() async {
     String appPackageName = "iexcellence.hr.wecheck";
     try {
-      await launch("https://itunes.apple.com/th/app/wecheck/id1596275552");
+      if (Platform.isAndroid)
+        await launch(
+            "https://play.google.com/store/apps/details?id=$appPackageName");
+      else
+        await launch("https://itunes.apple.com/th/app/wecheck/id1596275552");
       //("https://apps.apple.com/th/app/wecheck-hrmi/id1596275552");
       //("market://details?id=id1596275552");
       //("https://apps.apple.com/app/id1596275552");
@@ -467,7 +472,11 @@ class UtilService {
       context: context,
       type: AlertType.warning,
       title: 'Updating....', //appName + " v." + appVersion,
-      desc: "ต้องการ Update ระบบเป็น v.$toVersion",
+      //desc: getTextFromLang("alert_to_update", "ต้องการ Update ระบบเป็น v.") +
+      //toVersion,
+      desc: getTextFromLang(
+              "alert_to_update", "Please update application to v.") +
+          toVersion,
       buttons: [
         DialogButton(
           onPressed: () async {

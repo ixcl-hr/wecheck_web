@@ -2,9 +2,8 @@ import 'dart:async';
 // import 'dart:html';
 import 'dart:io';
 
-// import 'package:app_install_date/app_install_date.dart';
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:firebase_core/firebase_core.dart';
+import 'package:app_install_date/app_install_date.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -13,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:permission_handler/permission_handler.dart';
-// import 'package:package_info_plus/package_info_plus.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wecheck/constants/config.dart';
 import 'package:wecheck/screens/dashboard_screen.dart';
@@ -22,7 +21,22 @@ import 'package:wecheck/services/util_service.dart';
 
 import 'package:location/location.dart';
 
+import 'package:flutter_app_badger/flutter_app_badger.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+Future<void> _messageHandler(RemoteMessage message) async {
+  print('background message ${message.notification!.body}');
+}
+
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+late String appName;
+// late String packageName;
+late String version;
+// late String buildNumber;
+
 bool startLoad = true;
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -76,6 +90,81 @@ void main() async {
 
   await UtilService.reToken();
   await UtilService.getLanguageFromFireStore();
+
+  HttpOverrides.global = MyHttpOverrides();
+
+  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+  appName = packageInfo.appName;
+  //packageName = packageInfo.packageName;
+  version = packageInfo.version;
+  //profile = (await UtilService.getProfile())!;
+
+  InitialNotify();
+}
+
+Future<void> InitialNotify() async {
+  FlutterAppBadger.removeBadge();
+
+  var initializationSettingsAndroid =
+      const AndroidInitializationSettings('app_icon');
+  //var initializationSettingsIOS = const DarwinInitializationSettings();
+  var initializationSettingsIOS = const IOSInitializationSettings();
+  // onDidReceiveLocalNotification: onDidReceiveLocalNotification);
+  var initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+  flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  //,onSelectNotification: onSelectNotification);
+
+  if (Platform.isIOS) {
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(
+      alert: true, // Required to display a heads up notification
+      badge: true,
+      sound: true,
+    );
+  } else {
+    const AndroidNotificationChannel channel = AndroidNotificationChannel(
+      'high_importance_channel', // id
+      'high_importance_channel', // title
+      //'This channel is used for important notifications.', // description
+      importance: Importance.max,
+    );
+
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      // If `onMessage` is triggered with a notification, construct our own
+      // local notification to show to users using the created channel.
+      if (message.notification != null) {
+        // && android != null) {
+        RemoteNotification notification = message.notification!;
+        AndroidNotification android = message.notification!.android!;
+
+        flutterLocalNotificationsPlugin.show(
+            notification.hashCode,
+            notification.title,
+            notification.body,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                channel.id,
+                channel.name,
+                //channel.description,
+                icon: android.smallIcon,
+                // other properties...
+              ),
+            ));
+      }
+    });
+  }
+  FirebaseMessaging.onBackgroundMessage(_messageHandler);
+
+  FirebaseMessaging.onMessageOpenedApp.listen((message) {
+    print('Message clicked!');
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -145,10 +234,10 @@ class _SplashScreenState extends State<SplashScreen> {
   void handleTimeout() async {
     bool valid = true;
 
-    // PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    // appName = packageInfo.appName;
-    // appVersion = packageInfo.version;
-    // buildNumber = int.parse(packageInfo.buildNumber);
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    appName = packageInfo.appName;
+    appVersion = packageInfo.version;
+    buildNumber = int.parse(packageInfo.buildNumber);
 
     if (mounted) {
       setState(() {
@@ -159,23 +248,23 @@ class _SplashScreenState extends State<SplashScreen> {
       String? sessionId = prefs.getString('session_id');
       String? token = prefs.getString('token');
 
-      // newInstallTime =
-      //     !kIsWeb ? await AppInstallDate().installDate : DateTime.now();
-      // DateTime? oldInstallTime =
-      //     !kIsWeb ? UtilService.getInstallTimeFromPrefs(prefs) : newInstallTime;
+      newInstallTime =
+          !kIsWeb ? await AppInstallDate().installDate : DateTime.now();
+      DateTime? oldInstallTime =
+          !kIsWeb ? UtilService.getInstallTimeFromPrefs(prefs) : newInstallTime;
 
-      // if (sessionId == null ||
-      //     oldInstallTime == null ||
-      //     oldInstallTime.compareTo(newInstallTime) < 0 ||
-      //     token == null ||
-      //     token.isEmpty) valid = false;
+      if (sessionId == null ||
+          oldInstallTime == null ||
+          oldInstallTime.compareTo(newInstallTime) < 0 ||
+          token == null ||
+          token.isEmpty) valid = false;
 
-      // if (valid) {
-      //   Navigator.pushNamedAndRemoveUntil(
-      //       context, Dashboard.id, (route) => false);
-      // } else {
-      //   toNewRegisterScreen();
-      // }
+      if (valid) {
+        Navigator.pushNamedAndRemoveUntil(
+            context, Dashboard.id, (route) => false);
+      } else {
+        toNewRegisterScreen();
+      }
 
       Navigator.pushNamedAndRemoveUntil(
           context, Dashboard.id, (route) => false);
