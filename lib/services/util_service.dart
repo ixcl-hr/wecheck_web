@@ -488,9 +488,9 @@ class UtilService {
             Colors.deepOrangeAccent,
             Colors.deepOrangeAccent,
           ]),
-          child: const Text(
-            "อัพเดท",
-            style: TextStyle(color: Colors.white, fontSize: 20),
+          child: Text(
+            getTextFromLang("update", "Update"), //"อัพเดท",
+            style: const TextStyle(color: Colors.white, fontSize: 20),
           ),
         ),
         DialogButton(
@@ -501,9 +501,9 @@ class UtilService {
             Colors.black,
             Colors.black,
           ]),
-          child: const Text(
-            "ปิด",
-            style: TextStyle(color: Colors.white, fontSize: 20),
+          child: Text(
+            getTextFromLang("close", "Close"),
+            style: const TextStyle(color: Colors.white, fontSize: 20),
           ),
         )
       ],
