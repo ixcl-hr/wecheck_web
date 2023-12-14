@@ -148,7 +148,8 @@ class RequestOTApprovePageState extends State<RequestOTApprovePage> {
                 }
                 print("selectFull : $selectFull");
                 if (selectFull.isEmpty) {
-                  alertEmpty('โปรดเลือกรายการอนุมัติ');
+                  alertEmpty(UtilService.getTextFromLang(
+                      'please_select_list', 'โปรดเลือกรายการ'));
                   return;
                 }
 
@@ -211,7 +212,8 @@ class RequestOTApprovePageState extends State<RequestOTApprovePage> {
                 print("selectFull : $selectFull");
 
                 if (selectFull.isEmpty) {
-                  alertEmpty('โปรดเลือกรายการ');
+                  alertEmpty(UtilService.getTextFromLang(
+                      'please_select_list', 'โปรดเลือกรายการ'));
                   return;
                 }
                 onUnapproveOTSelected();

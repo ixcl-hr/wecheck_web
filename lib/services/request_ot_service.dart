@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:wecheck/services/util_service.dart';
 import '../constants/config.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
@@ -19,7 +20,11 @@ class RequestOTService {
 
     if (response.statusCode == 200) {
       if (feedback['flag'] == true) {
-        showAlert(context, 'สร้างคำขอทำโอทีสำเร็จ', AlertType.success, () {
+        showAlert(
+            context,
+            UtilService.getTextFromLang(
+                'ot_request_success', 'สร้างคำขอทำโอทีสำเร็จ'),
+            AlertType.success, () {
           Navigator.pop(context);
           Navigator.pop(context);
           Navigator.pop(context);

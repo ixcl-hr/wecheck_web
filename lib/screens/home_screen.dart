@@ -183,7 +183,7 @@ class HomeScreenState extends State<HomeScreen> {
                                             profile: profile!, language: "en");
                                     await langservice.updateLanguageToServer();
 
-                                    (context as Element).reassemble();
+                                    //(context as Element).reassemble();
                                     widget.notifyParent!();
                                     setState(() {});
                                   },
@@ -202,7 +202,7 @@ class HomeScreenState extends State<HomeScreen> {
                                         UpdateLanguageService(
                                             profile: profile!, language: "th");
                                     await langservice.updateLanguageToServer();
-                                    (context as Element).reassemble();
+                                    //(context as Element).reassemble();
                                     widget.notifyParent!();
                                     setState(() {});
                                   },

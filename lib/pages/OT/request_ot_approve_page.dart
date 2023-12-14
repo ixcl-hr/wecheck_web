@@ -148,7 +148,8 @@ class RequestOTApprovePageState extends State<RequestOTApprovePage> {
                 }
                 print("selectFull : $selectFull");
                 if (selectFull.isEmpty) {
-                  alertEmpty('โปรดเลือกรายการอนุมัติ');
+                  alertEmpty(UtilService.getTextFromLang(
+                      'please_select_list', 'โปรดเลือกรายการ'));
                   return;
                 }
 
@@ -248,15 +249,26 @@ class RequestOTApprovePageState extends State<RequestOTApprovePage> {
                               child: DataTable(
                                   showCheckboxColumn: true,
                                   dataRowHeight: 180,
-                                  columns: const [
+                                  columns: [
                                     DataColumn(label: Text('', style: kLabel)),
                                     DataColumn(
-                                        label: Text('ชื่อ / วันที่',
+                                        label: Text(
+                                            UtilService.getTextFromLang(
+                                                    'name', 'ชื่อ') +
+                                                ' / ' +
+                                                UtilService.getTextFromLang(
+                                                    'date', 'วันที่'),
                                             style: kLabel)),
                                     DataColumn(
-                                        label: Text('เวลา', style: kLabel)),
+                                        label: Text(
+                                            UtilService.getTextFromLang(
+                                                'time', 'เวลา'),
+                                            style: kLabel)),
                                     DataColumn(
-                                        label: Text('สถานะ', style: kLabel)),
+                                        label: Text(
+                                            UtilService.getTextFromLang(
+                                                'status', 'สถานะ'),
+                                            style: kLabel)),
                                   ],
                                   rows: otRequestList
                                       .map(

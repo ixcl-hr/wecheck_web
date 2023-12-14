@@ -114,7 +114,8 @@ class SwapShiftyApprovePageState extends State<SwapShiftyApprovePage> {
             title: 'อนุมัติ',
             onPressed: () {
               if (selectedId.isEmpty) {
-                alertEmpty('โปรดเลือกรายการ');
+                alertEmpty(UtilService.getTextFromLang(
+                    'please_select_list', 'โปรดเลือกรายการ'));
                 return;
               }
               onConfirmApproveSelected();
@@ -127,7 +128,8 @@ class SwapShiftyApprovePageState extends State<SwapShiftyApprovePage> {
             title: 'ไม่อนุมัติ',
             onPressed: () {
               if (selectedId.isEmpty) {
-                alertEmpty('โปรดเลือกรายการ');
+                alertEmpty(UtilService.getTextFromLang(
+                    'please_select_list', 'โปรดเลือกรายการ'));
                 return;
               }
               onConfirmCancelSelected();

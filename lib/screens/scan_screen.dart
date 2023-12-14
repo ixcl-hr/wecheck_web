@@ -590,7 +590,15 @@ class ScanScreenState extends State<ScanScreen> {
           print('ลงเวลาสำเร็จ');
           print(result.message);
           //Navigator.pop(context);
-          scanCheckInAlert(typeCheck: 'สแกนเวลา$typeScan');
+          var alertScanType = 'สแกนเวลา$typeScan';
+
+          if (typeScan == "เข้า")
+            alertScanType =
+                UtilService.getTextFromLang("checkin_in", alertScanType);
+          else
+            alertScanType =
+                UtilService.getTextFromLang("checkin_out", alertScanType);
+          scanCheckInAlert(typeCheck: alertScanType);
 
           getHistoryScan();
           getTypeScan();
@@ -716,15 +724,16 @@ class ScanScreenState extends State<ScanScreen> {
       context: context,
       type: AlertType.success,
       title: typeCheck,
-      desc: '$dateNow \n $timeNow \n สำเร็จ',
+      desc: '$dateNow \n $timeNow \n ' +
+          UtilService.getTextFromLang('success', 'สำเร็จ'),
       buttons: [
         DialogButton(
           color: const Color(0xFFFF8101),
           onPressed: () => Navigator.pop(context),
           width: 120,
-          child: const Text(
-            "ตกลง",
-            style: TextStyle(color: Colors.white, fontSize: 20),
+          child: Text(
+            UtilService.getTextFromLang("ok", "ตกลง"),
+            style: const TextStyle(color: Colors.white, fontSize: 20),
           ),
         )
       ],

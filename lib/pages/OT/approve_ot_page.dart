@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:wecheck/services/util_service.dart';
 import '../../constants/constant.dart';
 import '../../models/GetOTRequestModel.dart';
 import '../../models/profile.dart';
@@ -120,15 +121,16 @@ class _ApproveOTScreenState extends State<ApproveOTScreen> {
           isOverlayTapDismiss: false),
       context: context,
       type: AlertType.success,
-      title: 'ยืนยันการอนุมัติสำเร็จ',
+      title: UtilService.getTextFromLang(
+          'approve_success', 'ยืนยันการอนุมัติสำเร็จ'),
       buttons: [
         DialogButton(
           color: const Color(0xFFFF8101),
           onPressed: () => Navigator.pop(context),
           width: 120,
-          child: const Text(
-            "ตกลง",
-            style: TextStyle(color: Colors.white, fontSize: 20),
+          child: Text(
+            UtilService.getTextFromLang('ok', "ตกลง"),
+            style: const TextStyle(color: Colors.white, fontSize: 20),
           ),
         )
       ],
@@ -148,7 +150,8 @@ class _ApproveOTScreenState extends State<ApproveOTScreen> {
           topRight: Radius.circular(20),
         )),
         title: Text(
-          'คำร้องขอทำโอที (${otRequestList.length})',
+          UtilService.getTextFromLang('otrequest', 'คำร้องขอทำโอที') +
+              ('${otRequestList.length}'),
           style: const TextStyle(color: Colors.white, fontSize: 24),
         ),
         leading: IconButton(
@@ -173,15 +176,16 @@ class _ApproveOTScreenState extends State<ApproveOTScreen> {
                 child: DataTable(
                     showCheckboxColumn: true,
                     dataRowHeight: 210,
-                    columns: const [
+                    columns: [
                       DataColumn(
                         label: Expanded(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'เลือกรายการ',
-                                style: TextStyle(
+                                UtilService.getTextFromLang(
+                                    'please_select_list', 'เลือกรายการ'),
+                                style: const TextStyle(
                                     fontSize: 30,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black54),

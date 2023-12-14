@@ -117,7 +117,8 @@ class AbsentApprovePageState extends State<AbsentApprovePage> {
             title: UtilService.getTextFromLang("approve", "อนุมัติ"),
             onPressed: () {
               if (selectedId.isEmpty) {
-                alertEmpty('โปรดเลือกรายการ');
+                alertEmpty(UtilService.getTextFromLang(
+                    'please_select_list', 'โปรดเลือกรายการ'));
                 return;
               }
               onConfirmApproveSelected();
@@ -130,7 +131,8 @@ class AbsentApprovePageState extends State<AbsentApprovePage> {
             title: UtilService.getTextFromLang("unapprove", "ไม่อนุมัติ"),
             onPressed: () {
               if (selectedId.isEmpty) {
-                alertEmpty('โปรดเลือกรายการ');
+                alertEmpty(UtilService.getTextFromLang(
+                    'please_select_list', 'โปรดเลือกรายการ'));
                 return;
               }
               onConfirmCancelSelected();

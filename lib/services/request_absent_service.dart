@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:wecheck/services/util_service.dart';
 import '../constants/config.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
@@ -21,7 +22,8 @@ class RequestAbsentService {
       if (feedback['flag'] == true) {
         createAlertDialog(
           context,
-          'สร้างคำขอลางานสำเร็จ',
+          UtilService.getTextFromLang(
+              'leave_request_success', 'สร้างคำขอลางานสำเร็จ'),
           true,
         ).show();
       } else {
@@ -36,7 +38,8 @@ class RequestAbsentService {
       //print(feedback['approverid']);
       createAlertDialog(
         context,
-        'สร้างคำขอลางานไม่สำเร็จ',
+        UtilService.getTextFromLang(
+            'leave_request_fail', 'สร้างคำขอลางานไม่สำเร็จ'),
         false,
       ).show();
     }

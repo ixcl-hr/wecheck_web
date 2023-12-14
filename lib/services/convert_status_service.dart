@@ -4,13 +4,14 @@ class ConvertStatus {
   static String statusConvert = "";
   final int? statusid;
   ConvertStatus({this.statusid}) {
-    if (statusid == 6000001) {
-      statusConvert = 'รออนุมัติ';
-    } else if (statusid == 6000002) {
-      statusConvert = 'อนุมัติ';
-    } else if (statusid == 6000003) {
-      statusConvert = 'ไม่อนุมัติ';
-    }
+    statusConvert = UtilService.getStatusName(this.statusid);
+    // if (statusid == 6000001) {
+    //   statusConvert = 'รออนุมัติ';
+    // } else if (statusid == 6000002) {
+    //   statusConvert = 'อนุมัติ';
+    // } else if (statusid == 6000003) {
+    //   statusConvert = 'ไม่อนุมัติ';
+    // }
   }
   getStatusid() {
     return statusConvert;
