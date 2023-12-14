@@ -307,9 +307,11 @@ class _ApproveOTScreenState extends State<ApproveOTScreen> {
                                           contentPadding:
                                               const EdgeInsets.fromLTRB(
                                                   10, 10, 10, 10),
-                                          title: const Text(
-                                            'ต้องสแกนเข้า',
-                                            style: TextStyle(fontSize: 26),
+                                          title: Text(
+                                            UtilService.getTextFromLang(
+                                                'checkin_in', 'ต้องสแกนเข้า'),
+                                            style:
+                                                const TextStyle(fontSize: 26),
                                           ),
                                           controlAffinity:
                                               ListTileControlAffinity.leading,
@@ -338,9 +340,11 @@ class _ApproveOTScreenState extends State<ApproveOTScreen> {
                                           contentPadding:
                                               const EdgeInsets.fromLTRB(
                                                   10, 10, 10, 10),
-                                          title: const Text(
-                                            'ต้องสแกนออก',
-                                            style: TextStyle(fontSize: 26),
+                                          title: Text(
+                                            UtilService.getTextFromLang(
+                                                'checkin_out', 'ต้องสแกนออก'),
+                                            style:
+                                                const TextStyle(fontSize: 26),
                                           ),
                                           controlAffinity:
                                               ListTileControlAffinity.leading,
@@ -390,9 +394,10 @@ class _ApproveOTScreenState extends State<ApproveOTScreen> {
                   child: Flexible(
                     child: CheckboxListTile(
                       contentPadding: const EdgeInsets.all(0),
-                      title: const Text(
-                        'ต้องสแกนเข้า\nทั้งหมด',
-                        style: TextStyle(fontSize: 16),
+                      title: Text(
+                        UtilService.getTextFromLang(
+                            'checkin_in', 'ต้องสแกนเข้า\nทั้งหมด'),
+                        style: const TextStyle(fontSize: 16),
                       ),
                       controlAffinity: ListTileControlAffinity.leading,
                       value: checkedInAll,
@@ -412,9 +417,10 @@ class _ApproveOTScreenState extends State<ApproveOTScreen> {
                 Flexible(
                   child: CheckboxListTile(
                     contentPadding: const EdgeInsets.all(0),
-                    title: const Text(
-                      'ต้องสแกนออก\nทั้งหมด',
-                      style: TextStyle(fontSize: 16),
+                    title: Text(
+                      UtilService.getTextFromLang(
+                          'checkin_out', 'ต้องสแกนออก\nทั้งหมด'),
+                      style: const TextStyle(fontSize: 16),
                     ),
                     controlAffinity: ListTileControlAffinity.leading,
                     value: checkedOutAll,
