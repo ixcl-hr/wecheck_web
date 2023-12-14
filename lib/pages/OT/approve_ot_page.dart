@@ -446,17 +446,17 @@ class _ApproveOTScreenState extends State<ApproveOTScreen> {
               onPressed: () {
                 onApproveOT();
               },
-              child: const Row(
+              child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.check_box_outlined,
                     color: Colors.white,
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   Text(
-                    'ยืนยันอนุมัติ',
-                    style: TextStyle(fontSize: 22, color: Colors.white),
+                    UtilService.getTextFromLang("confirm", "ยืนยันอนุมัติ"),
+                    style: const TextStyle(fontSize: 22, color: Colors.white),
                   ),
                 ],
               ),

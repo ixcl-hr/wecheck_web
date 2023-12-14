@@ -623,9 +623,10 @@ class _AdjustTimePageState extends State<AdjustTimePage> {
   }
 
   Widget buildBottomButton(BuildContext context) {
-    String buttonText = 'สร้างคำขอ';
+    String buttonText =
+        UtilService.getTextFromLang("create_request", "สร้างคำขอ");
     if (widget.adjustRequestId > 0) {
-      buttonText = 'แก้ไขคำขอ';
+      buttonText = UtilService.getTextFromLang("edit_request", "แก้ไขคำขอ");
     }
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -738,17 +739,17 @@ class _AdjustTimePageState extends State<AdjustTimePage> {
                         widget.profile, payload, context);
                   },
                   width: 120,
-                  child: const Text(
-                    "ยืนยัน",
-                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  child: Text(
+                    UtilService.getTextFromLang("confirm", "ยืนยัน"),
+                    style: const TextStyle(color: Colors.white, fontSize: 20),
                   ),
                 ),
                 DialogButton(
                   onPressed: () => Navigator.pop(context),
                   width: 120,
-                  child: const Text(
-                    "ยกเลิก",
-                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  child: Text(
+                    UtilService.getTextFromLang("cancel", "ยกเลิก"),
+                    style: const TextStyle(color: Colors.white, fontSize: 20),
                   ),
                 ),
               ],

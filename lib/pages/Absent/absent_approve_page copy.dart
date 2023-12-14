@@ -599,7 +599,8 @@ class AbsentApprovePageState extends State<AbsentApprovePage> {
       context: context,
       type: AlertType.warning,
       title: "We check",
-      desc: "ยืนยันอนุมัติลางานรายการที่เลือก",
+      desc: UtilService.getTextFromLang(
+          "confirm", "ยืนยันอนุมัติลางานรายการที่เลือก"),
       buttons: [
         DialogButton(
           onPressed: () {

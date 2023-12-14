@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:wecheck/services/util_service.dart';
 import '../constants/config.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
@@ -19,7 +20,12 @@ class UpdateAbsentService {
 
     if (response.statusCode == 200) {
       if (feedback['flag'] == true) {
-        createAlertDialog(context, 'แก้ไขคำขอลางานสำเร็จ', true).show();
+        createAlertDialog(
+                context,
+                UtilService.getTextFromLang(
+                    'request_success', 'แก้ไขคำขอลางานสำเร็จ'),
+                true)
+            .show();
       } else {
         print(feedback['message']);
         createAlertDialog(

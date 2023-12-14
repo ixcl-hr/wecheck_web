@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:wecheck/services/util_service.dart';
 import '../constants/config.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
@@ -26,7 +27,8 @@ class UpdateSwapShiftService {
               isOverlayTapDismiss: false),
           context: context,
           type: AlertType.success,
-          title: 'แก้ไขคำขอทำโอทีสำเร็จ',
+          title: UtilService.getTextFromLang(
+              'request_success', 'แก้ไขคำขอทำโอทีสำเร็จ'),
           buttons: [
             DialogButton(
               color: const Color(0xFFFF8101),

@@ -684,7 +684,8 @@ class SwapShiftyApprovePageState extends State<SwapShiftyApprovePage> {
       context: context,
       type: AlertType.warning,
       title: "We check",
-      desc: "ยืนยันอนุมัติรายการที่เลือก",
+      desc:
+          UtilService.getTextFromLang("confirm", "ยืนยันอนุมัติรายการที่เลือก"),
       buttons: [
         DialogButton(
           onPressed: () {

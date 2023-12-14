@@ -540,18 +540,18 @@ class NewOTMultiplePageState extends State<NewOTMultiplePage> {
                       widget.profile, payload, context);
                 },
                 width: 120,
-                child: const Text(
-                  "ยืนยัน",
-                  style: TextStyle(color: Colors.white, fontSize: 20),
+                child: Text(
+                  UtilService.getTextFromLang("confirm", "ยืนยัน"),
+                  style: const TextStyle(color: Colors.white, fontSize: 20),
                 ),
               ),
               DialogButton(
                 onPressed: () => Navigator.pop(context),
                 width: 120,
                 color: Colors.black,
-                child: const Text(
-                  "ยกเลิก",
-                  style: TextStyle(color: Colors.white, fontSize: 20),
+                child: Text(
+                  UtilService.getTextFromLang("cancel", "ยกเลิก"),
+                  style: const TextStyle(color: Colors.white, fontSize: 20),
                 ),
               ),
             ],

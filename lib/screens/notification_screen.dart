@@ -392,13 +392,13 @@ class NotificationScreenState extends State<NotificationScreen> {
                   // Navigator.of(context).push(MaterialPageRoute(builder: (context) => RequestOTPage(profile: widget.profile)));
                 }
               },
-              child: const Text('ยืนยัน'),
+              child: Text(UtilService.getTextFromLang("confirm", "ยืนยัน")),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('ยกเลิก'),
+              child: Text(UtilService.getTextFromLang("cancel", "ยกเลิก")),
             ),
           ],
         );
