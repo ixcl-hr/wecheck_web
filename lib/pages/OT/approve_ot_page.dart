@@ -226,9 +226,13 @@ class _ApproveOTScreenState extends State<ApproveOTScreen> {
                                                     fontWeight:
                                                         FontWeight.bold),
                                               )),
-                                          const Text('เริ่ม',
+                                          Text(
+                                              UtilService.getTextFromLang(
+                                                  "start", "เริ่ม"),
                                               style: kDescription),
-                                          const Text('สิ้นสุด',
+                                          Text(
+                                              UtilService.getTextFromLang(
+                                                  "end", 'สิ้นสุด'),
                                               style: kDescription)
                                         ],
                                       ),
@@ -488,7 +492,8 @@ class _ApproveOTScreenState extends State<ApproveOTScreen> {
                   Text(selectedItem.otrequestid.toString(),
                       style: const TextStyle(
                           fontSize: 28, fontWeight: FontWeight.bold)),
-                  const Text('เริ่ม', style: kDescription),
+                  Text(UtilService.getTextFromLang("start", "เริ่ม"),
+                      style: kDescription),
                   const Text('สิ้นสุด', style: kDescription)
                 ],
               ),
@@ -500,8 +505,10 @@ class _ApproveOTScreenState extends State<ApproveOTScreen> {
                   Text(selectedItem.otrequestid.toString(),
                       style: const TextStyle(
                           fontSize: 28, fontWeight: FontWeight.bold)),
-                  const Text('เริ่ม', style: kDescription),
-                  const Text('สิ้นสุด', style: kDescription)
+                  Text(UtilService.getTextFromLang("start", 'เริ่ม'),
+                      style: kDescription),
+                  Text(UtilService.getTextFromLang("end", 'สิ้นสุด'),
+                      style: kDescription)
                 ],
               ),
               Column(
@@ -512,8 +519,10 @@ class _ApproveOTScreenState extends State<ApproveOTScreen> {
                   Text(selectedItem.otrequestid.toString(),
                       style: const TextStyle(
                           fontSize: 28, fontWeight: FontWeight.bold)),
-                  const Text('เริ่ม', style: kDescription),
-                  const Text('สิ้นสุด', style: kDescription)
+                  Text(UtilService.getTextFromLang("start", 'เริ่ม'),
+                      style: kDescription),
+                  Text(UtilService.getTextFromLang("end", 'สิ้นสุด'),
+                      style: kDescription)
                 ],
               ),
             ],

@@ -508,7 +508,7 @@ class NotificationPageState extends State<NotificationPage> {
             Expanded(
               flex: 1,
               child: Text(
-                'เริ่ม',
+                UtilService.getTextFromLang("start", "เริ่ม"),
                 style: style,
               ),
             ),

@@ -522,7 +522,7 @@ class NotificationScreenState extends State<NotificationScreen> {
             Expanded(
               flex: 1,
               child: Text(
-                'เริ่ม',
+                UtilService.getTextFromLang("start", 'เริ่ม'),
                 style: style,
               ),
             ),
@@ -542,7 +542,7 @@ class NotificationScreenState extends State<NotificationScreen> {
             Expanded(
               flex: 1,
               child: Text(
-                'สิ้นสุด',
+                UtilService.getTextFromLang("end", 'สิ้นสุด'),
                 style: style,
               ),
             ),

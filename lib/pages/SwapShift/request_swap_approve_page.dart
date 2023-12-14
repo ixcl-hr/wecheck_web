@@ -312,9 +312,13 @@ class RequestOTApprovePageState extends State<RequestOTApprovePage> {
                                                         fontSize: 28,
                                                         fontWeight:
                                                             FontWeight.bold)),
-                                                const Text('เริ่ม',
+                                                Text(
+                                                    UtilService.getTextFromLang(
+                                                        "start", 'เริ่ม'),
                                                     style: kDescription),
-                                                const Text('สิ้นสุด',
+                                                Text(
+                                                    UtilService.getTextFromLang(
+                                                        "end", 'สิ้นสุด'),
                                                     style: kDescription)
                                               ],
                                             )),
@@ -485,8 +489,9 @@ class RequestOTApprovePageState extends State<RequestOTApprovePage> {
                 filled: true,
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(20)))),
-            validator:
-                FormBuilderValidators.required(errorText: 'กรอกเวลาเริ่ม'),
+            validator: FormBuilderValidators.required(
+                errorText: UtilService.getTextFromLang(
+                    "please_select", 'กรอกเวลาเริ่ม')),
           ),
         ),
       ],
@@ -498,8 +503,8 @@ class RequestOTApprovePageState extends State<RequestOTApprovePage> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Container(
-          child: const Flexible(
-            child: Text('เริ่ม'),
+          child: Flexible(
+            child: Text(UtilService.getTextFromLang("start", "เริ่ม")),
           ),
         ),
         SizedBox(
@@ -517,8 +522,9 @@ class RequestOTApprovePageState extends State<RequestOTApprovePage> {
                 filled: true,
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(20)))),
-            validator:
-                FormBuilderValidators.required(errorText: 'กรอกวันเริ่ม'),
+            validator: FormBuilderValidators.required(
+                errorText: UtilService.getTextFromLang(
+                    "please_select", 'กรอกวันเริ่ม')),
           ),
         ),
         SizedBox(
