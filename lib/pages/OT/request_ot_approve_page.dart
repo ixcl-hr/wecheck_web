@@ -3,6 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:intl/intl.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:wecheck/services/get_attach_file_service.dart';
 import '../../constants/constant.dart';
 import '../../models/GetOTRequestModel.dart';
 import '../../models/approver.dart';
@@ -15,6 +16,7 @@ import '../../services/delete_my_ot_request_service.dart';
 import '../../services/get_ot_approver_service.dart';
 import '../../services/get_ot_request_service.dart';
 import '../../services/util_service.dart';
+import 'dart:convert' as convert;
 
 class RequestOTApprovePage extends StatefulWidget {
   final Profile profile;
@@ -247,171 +249,229 @@ class RequestOTApprovePageState extends State<RequestOTApprovePage> {
                             const SizedBox(height: 10),
                             FittedBox(
                               child: DataTable(
-                                  showCheckboxColumn: true,
-                                  dataRowHeight: 180,
-                                  columns: [
-                                    DataColumn(label: Text('', style: kLabel)),
-                                    DataColumn(
-                                        label: Text(
-                                            UtilService.getTextFromLang(
-                                                    'name', 'ชื่อ') +
-                                                ' / ' +
-                                                UtilService.getTextFromLang(
-                                                    'date', 'วันที่'),
-                                            style: kLabel)),
-                                    DataColumn(
-                                        label: Text(
-                                            UtilService.getTextFromLang(
-                                                'time', 'เวลา'),
-                                            style: kLabel)),
-                                    DataColumn(
-                                        label: Text(
-                                            UtilService.getTextFromLang(
-                                                'status', 'สถานะ'),
-                                            style: kLabel)),
-                                  ],
-                                  rows: otRequestList
-                                      .map(
-                                        (itemRow) => DataRow(
-                                          color: MaterialStateProperty
-                                              .resolveWith<Color>(
-                                                  (Set<MaterialState> states) {
-                                            if (states.contains(
-                                                MaterialState.selected)) {
-                                              return Theme.of(context)
-                                                  .colorScheme
-                                                  .primary
-                                                  .withOpacity(0.08);
-                                            }
-                                            // if (itemRow.statusid == 6000001)
-                                            //   return Colors.white38.withOpacity(0.1);
-                                            if (itemRow.statusid == 6000002) {
-                                              return const Color(0xFFBECFDE)
-                                                  .withOpacity(0.5);
-                                            }
-                                            if (itemRow.statusid == 6000003) {
-                                              return const Color(0xFFBECFDE)
-                                                  .withOpacity(0.5);
-                                            }
-                                            return Colors.white;
-                                          }),
-                                          selected:
-                                              selectedRecords.contains(itemRow),
-                                          // onSelectChanged: (selected) {
-                                          //   onSelectedRow(selected, itemRow);
-                                          // },
-                                          onSelectChanged:
-                                              itemRow.statusid == 6000001
-                                                  ? (selected) {
-                                                      onSelectedRow(
-                                                          selected ?? false,
-                                                          itemRow);
-                                                    }
-                                                  : null,
-                                          cells: [
-                                            DataCell(Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                const SizedBox(),
-                                                Text(
-                                                    itemRow.employeecode
-                                                        .toString(),
-                                                    style: const TextStyle(
-                                                        fontSize: 28,
-                                                        fontWeight:
-                                                            FontWeight.bold)),
-                                                Text(
-                                                    UtilService.getTextFromLang(
-                                                        "start", "เริ่ม"),
-                                                    style: kDescription),
-                                                Text(
-                                                    UtilService.getTextFromLang(
-                                                        "end", "สิ้นสุด"),
-                                                    style: kDescription)
-                                              ],
-                                            )),
-                                            DataCell(
-                                              SizedBox(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.9,
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceEvenly,
-                                                  children: [
-                                                    Text(
-                                                        itemRow.employeename ??
-                                                            "",
-                                                        style: const TextStyle(
-                                                            fontSize: 28,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold)),
-                                                    Text(
-                                                        ConvertDate(itemRow
-                                                                    .startdate)
-                                                                .getDate() ??
-                                                            "",
-                                                        style: kDescription),
-                                                    Text(
-                                                        ConvertDate(itemRow
-                                                                    .enddate)
-                                                                .getDate() ??
-                                                            "",
-                                                        style: kDescription),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            DataCell(Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                const Text('',
-                                                    style: TextStyle(
-                                                        fontSize: 30)),
-                                                Text(
-                                                    ConvertTime(itemRow
-                                                                .starttime)
-                                                            .getTime() ??
-                                                        "",
-                                                    style: kDescription),
-                                                Text(
-                                                    ConvertTime(itemRow.endtime)
-                                                            .getTime() ??
-                                                        "",
-                                                    style: kDescription),
-                                              ],
-                                            )),
-                                            DataCell(Row(
-                                              children: [
-                                                Text(
-                                                  ConvertStatus(
-                                                              statusid: itemRow
-                                                                  .statusid)
-                                                          .getStatusid() ??
+                                showCheckboxColumn: true,
+                                dataRowHeight: 180,
+                                columns: [
+                                  DataColumn(label: Text('', style: kLabel)),
+                                  DataColumn(
+                                      label: Text(
+                                          UtilService.getTextFromLang(
+                                                  'name', 'ชื่อ') +
+                                              ' / ' +
+                                              UtilService.getTextFromLang(
+                                                  'date', 'วันที่'),
+                                          style: kLabel)),
+                                  DataColumn(
+                                      label: Text(
+                                          UtilService.getTextFromLang(
+                                              'time', 'เวลา'),
+                                          style: kLabel)),
+                                  DataColumn(
+                                      label: Text(
+                                          UtilService.getTextFromLang(
+                                              'status', 'สถานะ'),
+                                          style: kLabel)),
+                                ],
+                                rows: otRequestList.map((itemRow) {
+                                  final GlobalKey remarkLocationKey =
+                                      GlobalKey();
+
+                                  return DataRow(
+                                    color: MaterialStateProperty.resolveWith<
+                                        Color>((Set<MaterialState> states) {
+                                      if (states
+                                          .contains(MaterialState.selected)) {
+                                        return Theme.of(context)
+                                            .colorScheme
+                                            .primary
+                                            .withOpacity(0.08);
+                                      }
+                                      // if (itemRow.statusid == 6000001)
+                                      //   return Colors.white38.withOpacity(0.1);
+                                      if (itemRow.statusid == 6000002) {
+                                        return const Color(0xFFBECFDE)
+                                            .withOpacity(0.5);
+                                      }
+                                      if (itemRow.statusid == 6000003) {
+                                        return const Color(0xFFBECFDE)
+                                            .withOpacity(0.5);
+                                      }
+                                      return Colors.white;
+                                    }),
+                                    selected: selectedRecords.contains(itemRow),
+                                    // onSelectChanged: (selected) {
+                                    //   onSelectedRow(selected, itemRow);
+                                    // },
+                                    onSelectChanged: itemRow.statusid == 6000001
+                                        ? (selected) {
+                                            onSelectedRow(
+                                                selected ?? false, itemRow);
+                                          }
+                                        : null,
+                                    cells: [
+                                      DataCell(Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          const SizedBox(),
+                                          Text(itemRow.employeecode.toString(),
+                                              style: const TextStyle(
+                                                  fontSize: 28,
+                                                  fontWeight: FontWeight.bold)),
+                                          Text(
+                                              UtilService.getTextFromLang(
+                                                  "start", "เริ่ม"),
+                                              style: kDescription),
+                                          Text(
+                                              UtilService.getTextFromLang(
+                                                  "end", "สิ้นสุด"),
+                                              style: kDescription)
+                                        ],
+                                      )),
+                                      DataCell(
+                                        SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.9,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Text(itemRow.employeename ?? "",
+                                                  style: const TextStyle(
+                                                      fontSize: 28,
+                                                      fontWeight:
+                                                          FontWeight.bold)),
+                                              Text(
+                                                  ConvertDate(itemRow.startdate)
+                                                          .getDate() ??
                                                       "",
-                                                  style: kStatus,
-                                                )
-                                              ],
-                                            )),
-                                          ],
+                                                  style: kDescription),
+                                              Text(
+                                                  ConvertDate(itemRow.enddate)
+                                                          .getDate() ??
+                                                      "",
+                                                  style: kDescription),
+                                            ],
+                                          ),
                                         ),
-                                      )
-                                      .toList()),
+                                      ),
+                                      DataCell(Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          const Text('',
+                                              style: TextStyle(fontSize: 30)),
+                                          Text(
+                                              ConvertTime(itemRow.starttime)
+                                                      .getTime() ??
+                                                  "",
+                                              style: kDescription),
+                                          Text(
+                                              ConvertTime(itemRow.endtime)
+                                                      .getTime() ??
+                                                  "",
+                                              style: kDescription),
+                                        ],
+                                      )),
+                                      DataCell(Column(
+                                        children: [
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          InkWell(
+                                            key: remarkLocationKey,
+                                            onTap: itemRow.hasRemark ?? false
+                                                ? () => UtilService.showAlert(
+                                                    remarkLocationKey,
+                                                    context,
+                                                    itemRow.remark ?? "")
+                                                : null,
+                                            child: Icon(
+                                              Icons.comment,
+                                              size: 50,
+                                              color: itemRow.hasRemark ?? false
+                                                  ? Colors.orange
+                                                  : Colors.grey,
+                                            ),
+                                          ),
+                                          InkWell(
+                                            onTap: itemRow.hasAttachFile ??
+                                                    false
+                                                ? () =>
+                                                    downloadAttachFile(itemRow)
+                                                : null,
+                                            child: Icon(
+                                              Icons.attach_email,
+                                              size: 50,
+                                              color:
+                                                  itemRow.hasAttachFile ?? false
+                                                      ? Colors.orange
+                                                      : Colors.grey,
+                                            ),
+                                          ),
+                                          Text(
+                                            ConvertStatus(
+                                                        statusid:
+                                                            itemRow.statusid)
+                                                    .getStatusid() ??
+                                                "",
+                                            style: kStatus,
+                                          )
+                                        ],
+                                      )),
+                                    ],
+                                  );
+                                }).toList(),
+                              ),
                             ),
                           ],
                         ),
                       ),
               ),
             ),
+    );
+  }
+
+  downloadAttachFile(OTRequest request) async {
+    var payload = convert.jsonEncode({
+      "companyname": widget.profile.companyname,
+      "employeeid": widget.profile.employeeid,
+      "requesttype": "AS",
+      "requestid": request.otrequestid,
+    });
+    print(payload);
+    showAlertLoading(context);
+    GetAttachFileService getAttachFileService = GetAttachFileService();
+    await getAttachFileService.getAttachFile(widget.profile, payload, context);
+  }
+
+  showAlertLoading(BuildContext context) {
+    AlertDialog alert = AlertDialog(
+      content: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const CircularProgressIndicator(),
+          const SizedBox(
+            width: 10,
+          ),
+          Container(
+              margin: const EdgeInsets.only(left: 5),
+              child: const Text("กำลังส่งคำขอ")),
+        ],
+      ),
+    );
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 

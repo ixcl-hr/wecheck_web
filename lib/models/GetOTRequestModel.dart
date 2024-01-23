@@ -21,7 +21,7 @@ class GetOTRequestModel {
     data['flag'] = flag;
     data['message'] = message;
     data['objectresult'] = objectresult.map((v) => v.toJson()).toList();
-      return data;
+    return data;
   }
 }
 
@@ -36,16 +36,26 @@ class OTRequest {
   late String endtime;
   int? statusid;
 
+  String? remark;
+  String? isattachfile;
+  bool? hasRemark;
+  bool? hasAttachFile;
+
   OTRequest(
-      {this.otrequestid,
+      this.otrequestid,
       this.employeecode,
       this.employeename,
       this.otdate,
-      required this.startdate,
-      required this.starttime,
-      required this.enddate,
-      required this.endtime,
-      this.statusid});
+      this.startdate,
+      this.starttime,
+      this.enddate,
+      this.endtime,
+      this.statusid,
+      this.remark,
+      this.isattachfile) {
+    hasRemark = remark != null && remark.toString().isNotEmpty;
+    hasAttachFile = isattachfile != null && isattachfile == 'Y';
+  }
 
   OTRequest.fromJson(Map<String, dynamic> json) {
     otrequestid = json['otrequestid'];
@@ -57,6 +67,11 @@ class OTRequest {
     enddate = json['enddate'].toString();
     endtime = json['endtime'].toString();
     statusid = json['statusid'];
+
+    remark = json['remark'];
+    isattachfile = json['isattachfile'];
+    hasRemark = remark != null && remark.toString().isNotEmpty;
+    hasAttachFile = isattachfile != null && isattachfile == 'Y';
   }
 
   Map<String, dynamic> toJson() {
@@ -70,6 +85,8 @@ class OTRequest {
     data['enddate'] = enddate;
     data['endtime'] = endtime;
     data['statusid'] = statusid;
+    data['remark'] = remark;
+    data['isattachfile'] = isattachfile;
     return data;
   }
 }
