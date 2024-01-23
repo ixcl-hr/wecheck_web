@@ -400,21 +400,21 @@ class RequestOTApprovePageState extends State<RequestOTApprovePage> {
                                                   : Colors.grey,
                                             ),
                                           ),
-                                          InkWell(
-                                            onTap: itemRow.hasAttachFile ??
-                                                    false
-                                                ? () =>
-                                                    downloadAttachFile(itemRow)
-                                                : null,
-                                            child: Icon(
-                                              Icons.attach_email,
-                                              size: 50,
-                                              color:
-                                                  itemRow.hasAttachFile ?? false
-                                                      ? Colors.orange
-                                                      : Colors.grey,
-                                            ),
-                                          ),
+                                          // InkWell(
+                                          //   onTap: itemRow.hasAttachFile ??
+                                          //           false
+                                          //       ? () =>
+                                          //           downloadAttachFile(itemRow)
+                                          //       : null,
+                                          //   child: Icon(
+                                          //     Icons.attach_email,
+                                          //     size: 50,
+                                          //     color:
+                                          //         itemRow.hasAttachFile ?? false
+                                          //             ? Colors.orange
+                                          //             : Colors.grey,
+                                          //   ),
+                                          // ),
                                           Text(
                                             ConvertStatus(
                                                         statusid:
